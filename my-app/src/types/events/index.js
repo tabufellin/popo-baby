@@ -1,0 +1,2 @@
+export const EVENT_ADDED = 'EVENT_ADDED'
+export const EVENT_REMOVED = 'EVENT_REMOVED'
