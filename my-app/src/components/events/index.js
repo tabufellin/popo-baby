@@ -1,43 +1,38 @@
 
-import event from '../event'
+import event from '../event/index'
 import { connect } from 'react-redux';
 import * as actions from '../../actions/events'
 import React, { Component }  from 'react';
 import * as selectors from '../../reducers/index'
 import range from 'lodash/range'
 
-const events = ({order, byId, onClick}) => (
+const events = ({id, events}) => (
+
     <div className="events">
-        {
-     /*    order.length === 0 ? (
-             <h1>
-                 {'No hay eventos!'}
-             </h1>
-         ) : (*/
-            
-            range(byId).map(
-                (_,index) => (
-                    <event 
-                        key={_}
-                        info={byId.key}
-                        onClick={ onClick }>
-                    </event>
-                )
-            )
-          
-                }
+      {events.length === 0 ? (
+        <h4>{"No hay eventos..."}</h4>
+      ) : (
+        events.map(item => <event key={item} eventId={item} babyId={id}/>)
+      )}
     </div>
+
 )
-
-
+/*
+const EventList = ({ id, events }) => (
+  <div className="white-text text-center text-md-left col-md-6 mb-5">
+    <MDBListGroup>
+      {events.length === 0 ? (
+        <h4>{"No hay eventos..."}</h4>
+      ) : (
+        events.map(item => <EventItem key={item} eventId={item} babyId={id}/>)
+      )}
+    </MDBListGroup>
+  </div>
+);
+*/
 export default connect(
     (state, {id}) => ({
-      events: selectors.getEventsOfBaby(state, id),
-    }),
-    (dispatch) => ({
-      onClick() {
-        dispatch(actions.removeEvent);
-      },
-    }),
+      events: selectors.getEvents(state, id),
+    })
   )(events);
   

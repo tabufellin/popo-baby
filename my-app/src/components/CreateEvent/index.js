@@ -3,7 +3,7 @@ import * as actions from '../../actions/events'
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux';
 
-const ExampleForm = ({ onSubmit }) => {
+const FormEvent = ({ onSubmit }) => {
     const [value1, changeValue1]=useState('');
     const [value2, changeValue2]=useState('');
 
@@ -104,4 +104,4 @@ export default withRouter(
         
       }
     })
-  )(ExampleForm))
+  )(FormEvent))

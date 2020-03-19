@@ -36,9 +36,9 @@ const babys = combineReducers ({
 
 export default babys
 
-export const getBaby = (byId, id) => byId[id];
-export const getBabys = (byId, id) => byId.map(
-    id => getBaby(byId, id),
+export const getBaby = (state, id) => state.byId[id];
+export const getBabys = state => state.order.map(
+    id => getBaby(state, id),
 )
 
 

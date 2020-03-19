@@ -45,16 +45,5 @@ const events = combineReducers ({
 
 export default events
 
-export const getEvent = (
-    order,
-    byId,
-    id,
-) => id < order.length ? byId[id] : undefined
-
-export const getEventsOfBaby = (order, byId, idBaby) => order.map(
-    id => getEvent(order, byId, id),
-)/*.filter(event => event.id === idBaby)*/
-
-/*export const getAgents = state => state.order.map(
-    id => getAgent(state, id),
-  ).filter(agent => agent != null);*/
+export const getEvent = (state,id) => state[id];
+export const getEvents = (state, babyId) => state.order.map(id => getEvent(state, id).filter(event.babyId === babyId))

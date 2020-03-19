@@ -3,14 +3,16 @@ import * as actions from '../../actions/babys'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { createBrowserHistory } from 'history'
+import { Link } from 'react-router-dom'
 //import * as selectors from '../../reducers/index'
 //import history from '../App/App'
 export const history = createBrowserHistory()
-const ExampleForm = ({ onSubmit }) => {
+const FormBaby = ({ onSubmit }) => {
     const [value1, changeValue1] = useState('');
     const [value2, changeValue2] = useState('');
     return (
       <Fragment>
+        <h1>Create Baby</h1>
         <input
           type="text"
           placeholder="Nombre"
@@ -23,9 +25,14 @@ const ExampleForm = ({ onSubmit }) => {
           value={value2}
           onChange={e => changeValue2(e.target.value)}
         />
+        <Link to={{pathname: '/babe'}}>
         <button type="submit" onClick={(dispatch) => onSubmit(value1, value2)}>
-          {'Crear'}
-        </button>
+            {'Crear'}
+          </button>
+        </Link>{' '}
+
+
+
       </Fragment>
     );
   } 
@@ -39,8 +46,6 @@ const ExampleForm = ({ onSubmit }) => {
           dispatch(actions.addBaby(value1, value2))
         }
       }),
-
-    )(ExampleForm))
-
+    )(FormBaby))
 
 

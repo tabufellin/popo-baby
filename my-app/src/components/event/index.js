@@ -2,12 +2,13 @@ import './styles.css'
 import { connect } from 'react-redux';
 import * as actions from '../../actions/events'
 import * as selectors from '../../reducers/events'
-import React, { Component }  from 'react';
-const event = ({ info, onClick }) => (
+import React  from 'react';
+const event = ({eventId, eventData, babyId, onClick}) => (
     <div className='event-wrapper'>
       <div className="info-event">
-        <p>Tipo: {info.type}</p> 
-        <p>Notas: {info.notes}</p>
+        <p>Tipo: {eventData.type}</p> 
+        <p>Notas: {eventData.notes}</p>
+        <p>Fecha: {eventData.date}</p>
       </div>
       <button onClick={onClick}>
         {'Eliminar Evento'}
@@ -16,8 +17,8 @@ const event = ({ info, onClick }) => (
   );
 
 export default connect(
-  (state, {id}) => ({
-    ...selectors.getEvent(state, id),
+  (state, {id, babyId}) => ({
+    eventData: selectors.getEvent(state, id),
   }),
   (dispatch) => ({
     onClick() {
