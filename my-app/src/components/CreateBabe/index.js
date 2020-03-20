@@ -42,6 +42,7 @@ const FormBaby = ({ onSubmit }) => {
       undefined,
       dispatch => ({
         onSubmit( value1, value2 ) {
+          console.log(value1 +  value2)
           history.push('/baby')
           dispatch(actions.addBaby(value1, value2))
         }

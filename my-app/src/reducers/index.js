@@ -15,7 +15,7 @@ const reducer = combineReducers({
 export default reducer
 
 export const getBaby = (state, id) => babysSelectors.getBaby(state.babys, id)
-export const getBabys = (state) => babysSelectors.getBabys(state.babys)
+export const getBabys = (state) => babysSelectors.getBabys(state)
 export const getEvent = (state, id) => eventsSelectors.getEvent(state.events ,id)
 export const getEvents = (state, babyId) => eventsSelectors.getEvents(state.events, babyId)
 
