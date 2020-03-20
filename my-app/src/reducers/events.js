@@ -24,7 +24,7 @@ const byId = (state = {}, action) => {
                 [action.payload.id] : {
                     type: action.payload.type,
                     dateTime: action.payload.dateTime,
-                    babyAsigned: action.payload.babyAsigned,
+                    babyId: action.payload.babyId,
                     notes: action.payload.notes,
                 }
             }
@@ -45,5 +45,5 @@ const events = combineReducers ({
 
 export default events
 
-export const getEvent = (state,id) => state[id];
-export const getEvents = (state, babyId) => state.order.map(id => getEvent(state, id).filter(event.babyId === babyId))
+export const getEvent = (state,id) => state.byId[id]
+export const getEvents = (state, babyId) => state.order.map(id => (getEvent(state, id))).filter((event) => event.babyId === babyId )

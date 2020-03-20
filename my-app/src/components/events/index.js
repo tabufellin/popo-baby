@@ -1,18 +1,18 @@
 
-import event from '../event/index'
+import Event from '../event/index'
 import { connect } from 'react-redux';
 import * as actions from '../../actions/events'
 import React, { Component }  from 'react';
 import * as selectors from '../../reducers/index'
 import range from 'lodash/range'
 
-const events = ({id, events}) => (
+const Events = ({id, events}) => (
 
     <div className="events">
       {events.length === 0 ? (
-        <h4>{"No hay eventos..."}</h4>
+        <h4>{"No hay eventos :("}</h4>
       ) : (
-        events.map(item => <event key={item} eventId={item} babyId={id}/>)
+        events.map(item => <Event key={item} eventId={item} babyId={id}/>)
       )}
     </div>
 
@@ -34,5 +34,5 @@ export default connect(
     (state, {id}) => ({
       events: selectors.getEvents(state, id),
     })
-  )(events);
+  )(Events);
   

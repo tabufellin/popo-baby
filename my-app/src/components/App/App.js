@@ -2,7 +2,9 @@
 import { configureStore } from '../../store'
 import CreateBabe from '../CreateBabe'
 import CreateEvent from '../CreateEvent'
-import events from '../events'
+import Events from '../events'
+import Babys from '../babys/babys'
+import BabySelector from '../BabySelector'
 // still have to see wat to do with the id value and the datetiem thing
 import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history'
@@ -44,11 +46,12 @@ const App = () => (
       <Switch>
         <Route exact path="/" component={CreateBabe} />
         <Route path="/babe" component={CreateEvent}>
+          <Babys />
           <CreateEvent></CreateEvent>
+          <Events></Events>
         </Route>
+        <Route exact path="/contact" component={Events} />
       </Switch>
-
-
     </Provider>
 
   </Router>

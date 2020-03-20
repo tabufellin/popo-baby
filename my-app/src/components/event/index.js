@@ -1,9 +1,9 @@
-import './styles.css'
+
 import { connect } from 'react-redux';
 import * as actions from '../../actions/events'
 import * as selectors from '../../reducers/events'
 import React  from 'react';
-const event = ({eventId, eventData, babyId, onClick}) => (
+const Event = ({eventId, eventData, babyId, onClick}) => (
     <div className='event-wrapper'>
       <div className="info-event">
         <p>Tipo: {eventData.type}</p> 
@@ -25,4 +25,4 @@ export default connect(
       dispatch(actions.removeEvent);
     },
   }),
-)(event);
+)(Event);

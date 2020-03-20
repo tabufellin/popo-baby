@@ -38,7 +38,7 @@ export default babys
 
 export const getBaby = (state, id) => state.byId[id];
 export const getBabys = state => state.order.map(
-    id => getBaby(state, id),
+    id => getBaby(state, id)
 )
 
 

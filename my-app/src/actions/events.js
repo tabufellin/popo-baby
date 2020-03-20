@@ -6,9 +6,9 @@ export const EVENT_ADDED = 'EVENT_ADDED'
 export const EVENT_REMOVED = 'EVENT_REMOVED'
 */
 
-export const addEvent = (type, dateTime, babyAssigned, notes) => ({
+export const addEvent = (type, babyId, notes) => ({
     type: types.EVENT_ADDED,
-    payload: {id: uuidv4(), type, dateTime, babyAssigned, notes},
+    payload: {id: uuidv4(), type, dateTime: 1/2/3, babyId, notes},
 })
 
 export const removeEvent = (id) => ({

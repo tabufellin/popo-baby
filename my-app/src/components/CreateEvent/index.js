@@ -100,8 +100,12 @@ export default withRouter(
     dispatch => ({
       onSubmit( value1, value2 ) {
         // i still have to fix the dateTime thing and the id generator
-        dispatch(actions.addEvent(value1, 1, 323, value2))
+        console.log(value1, value2)
+        dispatch(actions.addEvent(value1, 165454646, value2))
         
       }
     })
   )(FormEvent))
+
+
+  //export const addEvent = (type, babyAssigned, notes)
