@@ -1,4 +1,4 @@
-import * as types from '../types/babys'
+import * as types from '../types/babys/index'
 import { combineReducers } from 'redux'
 
 const order = (state = [], action) => {
@@ -36,9 +36,11 @@ const babys = combineReducers ({
 
 export default babys
 
-export const getBaby = (state, id) => state.byId[id];
-export const getBabys = state => state.order.map(
-    id => getBaby(state, id)
-)
+export const getBaby = (state,id) => state.byId[id]
+export const getBabys = (state) => {
+    return state.order.map( id => getBaby(state.babys, id))
+}
 
+
+//.filter(baby => baby !== null)
 

@@ -46,7 +46,7 @@ const App = () => (
       <Switch>
         <Route exact path="/" component={CreateBabe} />
         <Route path="/babe" component={CreateEvent}>
-          <Babys />
+          <BabySelector />
           <CreateEvent></CreateEvent>
           <Events></Events>
         </Route>
