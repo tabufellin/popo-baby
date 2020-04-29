@@ -1,0 +1,344 @@
+[1mdiff --git a/my-app/src/actions/events.js b/my-app/src/actions/events.js[m
+[1mindex 2984191..3ae7e4f 100644[m
+[1m--- a/my-app/src/actions/events.js[m
+[1m+++ b/my-app/src/actions/events.js[m
+[36m@@ -6,9 +6,9 @@[m [mexport const EVENT_ADDED = 'EVENT_ADDED'[m
+ export const EVENT_REMOVED = 'EVENT_REMOVED'[m
+ */[m
+ [m
+[31m-export const addEvent = (type, dateTime, babyAssigned, notes) => ({[m
+[32m+[m[32mexport const addEvent = (type, babyId, notes) => ({[m
+     type: types.EVENT_ADDED,[m
+[31m-    payload: {id: uuidv4(), type, dateTime, babyAssigned, notes},[m
+[32m+[m[32m    payload: {id: uuidv4(), type, dateTime: 1/2/3, babyId, notes},[m
+ })[m
+ [m
+ export const removeEvent = (id) => ({[m
+[1mdiff --git a/my-app/src/components/App/App.js b/my-app/src/components/App/App.js[m
+[1mindex 9551a42..85f9c66 100644[m
+[1m--- a/my-app/src/components/App/App.js[m
+[1m+++ b/my-app/src/components/App/App.js[m
+[36m@@ -2,7 +2,9 @@[m
+ import { configureStore } from '../../store'[m
+ import CreateBabe from '../CreateBabe'[m
+ import CreateEvent from '../CreateEvent'[m
+[31m-import events from '../events'[m
+[32m+[m[32mimport Events from '../events'[m
+[32m+[m[32mimport Babys from '../babys/babys'[m
+[32m+[m[32mimport BabySelector from '../BabySelector'[m
+ // still have to see wat to do with the id value and the datetiem thing[m
+ import { Provider } from 'react-redux';[m
+ import { createBrowserHistory } from 'history'[m
+[36m@@ -44,11 +46,12 @@[m [mconst App = () => ([m
+       <Switch>[m
+         <Route exact path="/" component={CreateBabe} />[m
+         <Route path="/babe" component={CreateEvent}>[m
+[32m+[m[32m          <BabySelector />[m
+           <CreateEvent></CreateEvent>[m
+[32m+[m[32m          <Events></Events>[m
+         </Route>[m
+[32m+[m[32m        <Route exact path="/contact" component={Events} />[m
+       </Switch>[m
+[31m-[m
+[31m-[m
+     </Provider>[m
+ [m
+   </Router>[m
+[1mdiff --git a/my-app/src/components/BabySelector/index.js b/my-app/src/components/BabySelector/index.js[m
+[1mindex 649fd94..6ed253e 100644[m
+[1m--- a/my-app/src/components/BabySelector/index.js[m
+[1m+++ b/my-app/src/components/BabySelector/index.js[m
+[36m@@ -1,54 +1,32 @@[m
+[31m-/*import React from 'react'[m
+[31m-import FilterLink from './FilterLink'[m
+[31m-import SelectBox from '../Select-Box'[m
+[31m-const BabySelector = (babys) => (([m
+[31m-    const [value, changeValue] = useState('')[m
+[32m+[m[32mimport React, { useState, Fragment } from 'react';[m
+[32m+[m[32mimport {withRouter} from 'react-router-dom'[m
+[32m+[m[32mimport { connect } from 'react-redux';[m
+[32m+[m[32mimport * as selectors from '../../reducers/index'[m
+ [m
+[32m+[m[32mconst FormSelectorBaby = ({ onChange, babys }) => {[m
+[32m+[m[32m    const [value1, changeValue1]=useState('')[m
+     return ([m
+[31m-        <Fragment>[m
+[31m-            <select>[m
+[31m-                id ="mySelect"[m
+[31m-            </select>[m
+[31m-[m
+[31m-            mySel[m
+[31m-        </Fragment>[m
+[31m-    )[m
+[32m+[m[32m      <Fragment>[m
+ [m
+[31m-)[m
+[32m+[m[32m        <label>Choose baby: </label>[m[41m  [m
+[32m+[m[32m          <select value={value1} onChange={e => {[m
+[32m+[m[32m              history.push('/baby/'+e.target.value)[m
+[32m+[m[32m              return changeValue1(e.target.value)[m
+[32m+[m[32m            }}>[m[41m [m
+[32m+[m[32m            {[m
+[32m+[m[32m               babys.map( baby => { <option key={baby.id} value={baby.id}>  {baby.name}  </option> })[m
+[32m+[m[32m            }[m
+ [m
+[32m+[m[32m          </select>[m
+ [m
+[31m-const ExampleForm = ({ onSubmit }) => {[m
+[31m-    const [value1, changeValue1] = useState('');[m
+[31m-    const [value2, changeValue2] = useState('');[m
+[31m-    return ([m
+[31m-      <Fragment>[m
+[31m-        <input[m
+[31m-          type="text"[m
+[31m-          placeholder="Nombre"[m
+[31m-          value={value1}[m
+[31m-          onChange={e => changeValue1(e.target.value)}[m
+[31m-        />[m
+[31m-        <input[m
+[31m-          type="text"[m
+[31m-          placeholder="Apellido"[m
+[31m-          value={value2}[m
+[31m-          onChange={e => changeValue2(e.target.value)}[m
+[31m-        />[m
+[31m-        <button type="submit" onClick={(dispatch) => onSubmit(value1, value2)}>[m
+[31m-          {'Crear'}[m
+[31m-        </button>[m
+       </Fragment>[m
+[31m-    );[m
+[31m-  } [m
+ [m
+[31m-const event = ({ info, onClick }) => ([m
+[31m-    <div className = 'event-wrapper'>[m
+[31m-      <div className="info-event">[m
+[31m-        <p>Tipo: {info.type}</p>[m
+[31m-        <p>Notas: {info.notes}</p>[m
+[31m-      </div>[m
+[31m-      <button onClick={onClick}>[m
+[31m-        {'Eliminar Evento'}[m
+[31m-      </button>[m
+[31m-    </div>[m
+[31m-  );[m
+\ No newline at end of file[m
+[32m+[m[32m    )[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  export default withRouter(connect[m
+[32m+[m[32m    ([m
+[32m+[m[32m    state => ({[m
+[32m+[m[32m        babys: selectors.getBabys(state)[m
+[32m+[m[32m    })[m
+[32m+[m[32m)(FormSelectorBaby))[m
+[1mdiff --git a/my-app/src/components/CreateEvent/index.js b/my-app/src/components/CreateEvent/index.js[m
+[1mindex 37fabc4..70cef71 100644[m
+[1m--- a/my-app/src/components/CreateEvent/index.js[m
+[1m+++ b/my-app/src/components/CreateEvent/index.js[m
+[36m@@ -100,8 +100,12 @@[m [mexport default withRouter([m
+     dispatch => ({[m
+       onSubmit( value1, value2 ) {[m
+         // i still have to fix the dateTime thing and the id generator[m
+[31m-        dispatch(actions.addEvent(value1, 1, 323, value2))[m
+[32m+[m[32m        console.log(value1, value2)[m
+[32m+[m[32m        dispatch(actions.addEvent(value1, 165454646, value2))[m
+         [m
+       }[m
+     })[m
+[31m-  )(FormEvent))[m
+\ No newline at end of file[m
+[32m+[m[32m  )(FormEvent))[m
+[32m+[m
+[32m+[m
+[32m+[m[32m  //export const addEvent = (type, babyAssigned, notes)[m
+\ No newline at end of file[m
+[1mdiff --git a/my-app/src/components/baby/baby.js b/my-app/src/components/baby/baby.js[m
+[1mnew file mode 100644[m
+[1mindex 0000000..9aaf218[m
+[1m--- /dev/null[m
+[1m+++ b/my-app/src/components/baby/baby.js[m
+[36m@@ -0,0 +1,25 @@[m
+[32m+[m
+[32m+[m[32mimport { connect } from 'react-redux';[m
+[32m+[m[32mimport * as actions from '../../actions/events'[m
+[32m+[m[32mimport * as selectors from '../../reducers/babys'[m
+[32m+[m[32mimport React  from 'react';[m
+[32m+[m
+[32m+[m[32mconst Baby = ({onClick, babyData}) => {[m
+[32m+[m[32m    <li[m
+[32m+[m[32m        onClick={onClick}[m
+[32m+[m[32m    >[m
+[32m+[m[32m        {babyData.name} {babyData.lastname}[m
+[32m+[m[32m    </li>[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mexport default connect([m
+[32m+[m[32m    (state, {id}) => ({[m
+[32m+[m[32m      babyData: selectors.getBaby(state, id),[m
+[32m+[m[32m    }),[m
+[32m+[m[32m    (dispatch) => ({[m
+[32m+[m[32m      onClick() {[m
+[32m+[m[32m        console.log("hola");[m
+[32m+[m[32m      },[m
+[32m+[m[32m    }),[m
+[32m+[m[32m  )(Baby);[m
+[32m+[m[41m  [m
+\ No newline at end of file[m
+[1mdiff --git a/my-app/src/components/babys/babys.js b/my-app/src/components/babys/babys.js[m
+[1mnew file mode 100644[m
+[1mindex 0000000..95093bf[m
+[1m--- /dev/null[m
+[1m+++ b/my-app/src/components/babys/babys.js[m
+[36m@@ -0,0 +1,33 @@[m
+[32m+[m[32mimport { connect } from 'react-redux';[m
+[32m+[m[32mimport * as actions from '../../actions/events'[m
+[32m+[m[32mimport * as selectors from '../../reducers/babys'[m
+[32m+[m[32mimport React  from 'react';[m
+[32m+[m[32mimport Baby from '../baby/baby'[m
+[32m+[m
+[32m+[m
+[32m+[m[32mconst Babys = ({babys}) => ([m
+[32m+[m[32m    <ul>[m
+[32m+[m[32m        {[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m[32m                babys.map(baby =>[m
+[32m+[m
+[32m+[m[32m                    <Baby[m[41m [m
+[32m+[m[32m                        key = {baby.id}[m
+[32m+[m[32m                        {...baby}[m
+[32m+[m[32m                    />[m[41m  [m
+[32m+[m[32m                )[m
+[32m+[m
+[32m+[m[41m            [m
+[32m+[m
+[32m+[m[32m        }[m
+[32m+[m[32m    </ul>[m
+[32m+[m[32m)[m
+[32m+[m
+[32m+[m
+[32m+[m[32mexport default connect([m
+[32m+[m[32m    (state) => ({[m
+[32m+[m[32m      babys: selectors.getBabys(state),[m
+[32m+[m[32m    })[m
+[32m+[m[32m    )(Babys);[m
+\ No newline at end of file[m
+[1mdiff --git a/my-app/src/components/event/index.js b/my-app/src/components/event/index.js[m
+[1mindex 096452f..c3d51b6 100644[m
+[1m--- a/my-app/src/components/event/index.js[m
+[1m+++ b/my-app/src/components/event/index.js[m
+[36m@@ -1,9 +1,9 @@[m
+[31m-import './styles.css'[m
+[32m+[m
+ import { connect } from 'react-redux';[m
+ import * as actions from '../../actions/events'[m
+ import * as selectors from '../../reducers/events'[m
+ import React  from 'react';[m
+[31m-const event = ({eventId, eventData, babyId, onClick}) => ([m
+[32m+[m[32mconst Event = ({eventId, eventData, babyId, onClick}) => ([m
+     <div className='event-wrapper'>[m
+       <div className="info-event">[m
+         <p>Tipo: {eventData.type}</p> [m
+[36m@@ -25,4 +25,4 @@[m [mexport default connect([m
+       dispatch(actions.removeEvent);[m
+     },[m
+   }),[m
+[31m-)(event);[m
+[32m+[m[32m)(Event);[m
+[1mdiff --git a/my-app/src/components/events/index.js b/my-app/src/components/events/index.js[m
+[1mindex 71c529d..a47caba 100644[m
+[1m--- a/my-app/src/components/events/index.js[m
+[1m+++ b/my-app/src/components/events/index.js[m
+[36m@@ -1,18 +1,18 @@[m
+ [m
+[31m-import event from '../event/index'[m
+[32m+[m[32mimport Event from '../event/index'[m
+ import { connect } from 'react-redux';[m
+ import * as actions from '../../actions/events'[m
+ import React, { Component }  from 'react';[m
+ import * as selectors from '../../reducers/index'[m
+ import range from 'lodash/range'[m
+ [m
+[31m-const events = ({id, events}) => ([m
+[32m+[m[32mconst Events = ({id, events}) => ([m
+ [m
+     <div className="events">[m
+       {events.length === 0 ? ([m
+[31m-        <h4>{"No hay eventos..."}</h4>[m
+[32m+[m[32m        <h4>{"No hay eventos :("}</h4>[m
+       ) : ([m
+[31m-        events.map(item => <event key={item} eventId={item} babyId={id}/>)[m
+[32m+[m[32m        events.map(item => <Event key={item} eventId={item} babyId={id}/>)[m
+       )}[m
+     </div>[m
+ [m
+[36m@@ -34,5 +34,5 @@[m [mexport default connect([m
+     (state, {id}) => ({[m
+       events: selectors.getEvents(state, id),[m
+     })[m
+[31m-  )(events);[m
+[32m+[m[32m  )(Events);[m
+   [m
+\ No newline at end of file[m
+[1mdiff --git a/my-app/src/reducers/babys.js b/my-app/src/reducers/babys.js[m
+[1mindex 6e76dd3..c0d7036 100644[m
+[1m--- a/my-app/src/reducers/babys.js[m
+[1m+++ b/my-app/src/reducers/babys.js[m
+[36m@@ -1,4 +1,4 @@[m
+[31m-import * as types from '../types/babys'[m
+[32m+[m[32mimport * as types from '../types/babys/index'[m
+ import { combineReducers } from 'redux'[m
+ [m
+ const order = (state = [], action) => {[m
+[36m@@ -36,9 +36,11 @@[m [mconst babys = combineReducers ({[m
+ [m
+ export default babys[m
+ [m
+[31m-export const getBaby = (state, id) => state.byId[id];[m
+[31m-export const getBabys = state => state.order.map([m
+[31m-    id => getBaby(state, id),[m
+[31m-)[m
+[32m+[m[32mexport const getBaby = (state,id) => state.byId[id][m
+[32m+[m[32mexport const getBabys = (state) => {[m
+[32m+[m[32m    return state.order.map( id => getBaby(state.babys, id))[m
+[32m+[m[32m}[m
+[32m+[m
+ [m
+[32m+[m[32m//.filter(baby => baby !== null)[m
+ [m
+[1mdiff --git a/my-app/src/reducers/events.js b/my-app/src/reducers/events.js[m
+[1mindex 1d9e15f..09431b9 100644[m
+[1m--- a/my-app/src/reducers/events.js[m
+[1m+++ b/my-app/src/reducers/events.js[m
+[36m@@ -24,7 +24,7 @@[m [mconst byId = (state = {}, action) => {[m
+                 [action.payload.id] : {[m
+                     type: action.payload.type,[m
+                     dateTime: action.payload.dateTime,[m
+[31m-                    babyAsigned: action.payload.babyAsigned,[m
+[32m+[m[32m                    babyId: action.payload.babyId,[m
+                     notes: action.payload.notes,[m
+                 }[m
+             }[m
+[36m@@ -45,5 +45,5 @@[m [mconst events = combineReducers ({[m
+ [m
+ export default events[m
+ [m
+[31m-export const getEvent = (state,id) => state[id];[m
+[31m-export const getEvents = (state, babyId) => state.order.map(id => getEvent(state, id).filter(event.babyId === babyId))[m
+\ No newline at end of file[m
+[32m+[m[32mexport const getEvent = (state,id) => state.byId[id][m
+[32m+[m[32mexport const getEvents = (state, babyId) => state.order.map(id => (getEvent(state, id))).filter((event) => event.babyId === babyId )[m
+\ No newline at end of file[m
+[1mdiff --git a/my-app/src/reducers/index.js b/my-app/src/reducers/index.js[m
+[1mindex 7bea6e8..6085273 100644[m
+[1m--- a/my-app/src/reducers/index.js[m
+[1m+++ b/my-app/src/reducers/index.js[m
+[36m@@ -15,7 +15,7 @@[m [mconst reducer = combineReducers({[m
+ export default reducer[m
+ [m
+ export const getBaby = (state, id) => babysSelectors.getBaby(state.babys, id)[m
+[31m-export const getBabys = (state, id) =>babysSelectors.getBabys(state.babys)[m
+[32m+[m[32mexport const getBabys = (state) => babysSelectors.getBabys(state.babys)[m
+ export const getEvent = (state, id) => eventsSelectors.getEvent(state.events ,id)[m
+[31m-export const getEvents = (state, babyId) => eventsSelectors.getEvents(state.events.byId, state.events.order)[m
+[32m+[m[32mexport const getEvents = (state, babyId) => eventsSelectors.getEvents(state.events, babyId)[m
+ [m

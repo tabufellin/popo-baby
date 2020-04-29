@@ -1,0 +1,6 @@
+project_env
+project1_env
+node_modules/
+.DS_Store
+venv/
+*.pyc*
